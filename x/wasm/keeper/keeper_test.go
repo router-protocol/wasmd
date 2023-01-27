@@ -1946,17 +1946,17 @@ func TestReply(t *testing.T) {
 	example := SeedNewContractInstance(t, ctx, keepers, &mock)
 
 	specs := map[string]struct {
-		replyFn func(codeID wasmvm.Checksum, env wasmvmtypes.Env, reply wasmvmtypes.Reply, store wasmvm.KVStore, goapi wasmvm.GoAPI, querier wasmvm.Querier, gasMeter wasmvm.GasMeter, gasLimit uint64, deserCost wasmvmtypes.UFraction) (*wasmvmtypes.Response, uint64, error)
-		expData []byte
-		expErr  bool
-		expEvt  sdk.Events
+		replyFn      func(codeID wasmvm.Checksum, env wasmvmtypes.Env, reply wasmvmtypes.Reply, store wasmvm.KVStore, goapi wasmvm.GoAPI, querier wasmvm.Querier, gasMeter wasmvm.GasMeter, gasLimit uint64, deserCost wasmvmtypes.UFraction) (*wasmvmtypes.Response, uint64, error)
+		expData      []byte
+		expErr       bool
+		expEventAttr sdk.Events
 	}{
 		"all good": {
 			replyFn: func(codeID wasmvm.Checksum, env wasmvmtypes.Env, reply wasmvmtypes.Reply, store wasmvm.KVStore, goapi wasmvm.GoAPI, querier wasmvm.Querier, gasMeter wasmvm.GasMeter, gasLimit uint64, deserCost wasmvmtypes.UFraction) (*wasmvmtypes.Response, uint64, error) {
 				return &wasmvmtypes.Response{Data: []byte("foo")}, 1, nil
 			},
-			expData: []byte("foo"),
-			expEvt:  sdk.Events{sdk.NewEvent("reply", sdk.NewAttribute("_contract_address", example.Contract.String()))},
+			expData:      []byte("foo"),
+			expEventAttr: sdk.Events{sdk.NewEvent("reply", sdk.NewAttribute("_contract_address", example.Contract.String()))},
 		},
 		"with query": {
 			replyFn: func(codeID wasmvm.Checksum, env wasmvmtypes.Env, reply wasmvmtypes.Reply, store wasmvm.KVStore, goapi wasmvm.GoAPI, querier wasmvm.Querier, gasMeter wasmvm.GasMeter, gasLimit uint64, deserCost wasmvmtypes.UFraction) (*wasmvmtypes.Response, uint64, error) {
@@ -1971,8 +1971,8 @@ func TestReply(t *testing.T) {
 				assert.Equal(t, wasmvmtypes.BalanceResponse{Amount: wasmvmtypes.NewCoin(0, "stake")}, gotBankRsp)
 				return &wasmvmtypes.Response{Data: []byte("foo")}, 1, nil
 			},
-			expData: []byte("foo"),
-			expEvt:  sdk.Events{sdk.NewEvent("reply", sdk.NewAttribute("_contract_address", example.Contract.String()))},
+			expData:      []byte("foo"),
+			expEventAttr: sdk.Events{sdk.NewEvent("reply", sdk.NewAttribute("_contract_address", example.Contract.String()))},
 		},
 		"with query error handled": {
 			replyFn: func(codeID wasmvm.Checksum, env wasmvmtypes.Env, reply wasmvmtypes.Reply, store wasmvm.KVStore, goapi wasmvm.GoAPI, querier wasmvm.Querier, gasMeter wasmvm.GasMeter, gasLimit uint64, deserCost wasmvmtypes.UFraction) (*wasmvmtypes.Response, uint64, error) {
@@ -1981,8 +1981,8 @@ func TestReply(t *testing.T) {
 				assert.Nil(t, bzRsp)
 				return &wasmvmtypes.Response{Data: []byte("foo")}, 1, nil
 			},
-			expData: []byte("foo"),
-			expEvt:  sdk.Events{sdk.NewEvent("reply", sdk.NewAttribute("_contract_address", example.Contract.String()))},
+			expData:      []byte("foo"),
+			expEventAttr: sdk.Events{sdk.NewEvent("reply", sdk.NewAttribute("_contract_address", example.Contract.String()))},
 		},
 		"error": {
 			replyFn: func(codeID wasmvm.Checksum, env wasmvmtypes.Env, reply wasmvmtypes.Reply, store wasmvm.KVStore, goapi wasmvm.GoAPI, querier wasmvm.Querier, gasMeter wasmvm.GasMeter, gasLimit uint64, deserCost wasmvmtypes.UFraction) (*wasmvmtypes.Response, uint64, error) {
@@ -2002,7 +2002,7 @@ func TestReply(t *testing.T) {
 			}
 			require.NoError(t, gotErr)
 			assert.Equal(t, spec.expData, gotData)
-			assert.Equal(t, spec.expEvt, em.Events())
+			assert.Equal(t, spec.expEventAttr, em.Events())
 		})
 	}
 }
@@ -2051,14 +2051,14 @@ func TestSetAccessConfig(t *testing.T) {
 		newConfig       types.AccessConfig
 		caller          sdk.AccAddress
 		expErr          bool
-		expEvts         map[string]string
+		expEventAttr    map[string]string
 	}{
 		"user with new permissions == chain permissions": {
 			authz:           DefaultAuthorizationPolicy{},
 			chainPermission: types.AccessTypeEverybody,
 			newConfig:       types.AllowEverybody,
 			caller:          creatorAddr,
-			expEvts: map[string]string{
+			expEventAttr: map[string]string{
 				"code_id":         "1",
 				"code_permission": "Everybody",
 			},
@@ -2068,7 +2068,7 @@ func TestSetAccessConfig(t *testing.T) {
 			chainPermission: types.AccessTypeEverybody,
 			newConfig:       types.AllowNobody,
 			caller:          creatorAddr,
-			expEvts: map[string]string{
+			expEventAttr: map[string]string{
 				"code_id":         "1",
 				"code_permission": "Nobody",
 			},
@@ -2092,7 +2092,7 @@ func TestSetAccessConfig(t *testing.T) {
 			chainPermission: types.AccessTypeEverybody,
 			newConfig:       types.AllowEverybody,
 			caller:          creatorAddr,
-			expEvts: map[string]string{
+			expEventAttr: map[string]string{
 				"code_id":         "1",
 				"code_permission": "Everybody",
 			},
@@ -2102,7 +2102,7 @@ func TestSetAccessConfig(t *testing.T) {
 			chainPermission: types.AccessTypeEverybody,
 			newConfig:       types.AllowNobody,
 			caller:          creatorAddr,
-			expEvts: map[string]string{
+			expEventAttr: map[string]string{
 				"code_id":         "1",
 				"code_permission": "Nobody",
 			},
@@ -2112,7 +2112,7 @@ func TestSetAccessConfig(t *testing.T) {
 			chainPermission: types.AccessTypeNobody,
 			newConfig:       types.AccessTypeOnlyAddress.With(creatorAddr),
 			caller:          creatorAddr,
-			expEvts: map[string]string{
+			expEventAttr: map[string]string{
 				"code_id":              "1",
 				"code_permission":      "OnlyAddress",
 				"authorized_addresses": creatorAddr.String(),
@@ -2123,7 +2123,7 @@ func TestSetAccessConfig(t *testing.T) {
 			chainPermission: types.AccessTypeNobody,
 			newConfig:       types.AccessTypeAnyOfAddresses.With(creatorAddr, nonCreatorAddr),
 			caller:          creatorAddr,
-			expEvts: map[string]string{
+			expEventAttr: map[string]string{
 				"code_id":              "1",
 				"code_permission":      "AnyOfAddresses",
 				"authorized_addresses": creatorAddr.String() + "," + nonCreatorAddr.String(),
@@ -2133,7 +2133,7 @@ func TestSetAccessConfig(t *testing.T) {
 			authz:           GovAuthorizationPolicy{},
 			chainPermission: types.AccessTypeEverybody,
 			newConfig:       types.AllowEverybody,
-			expEvts: map[string]string{
+			expEventAttr: map[string]string{
 				"code_id":         "1",
 				"code_permission": "Everybody",
 			},
@@ -2160,7 +2160,7 @@ func TestSetAccessConfig(t *testing.T) {
 			// and event emitted
 			require.Len(t, em.Events(), 1)
 			assert.Equal(t, "update_code_access_config", em.Events()[0].Type)
-			assert.Equal(t, spec.expEvts, attrsToStringMap(em.Events()[0].Attributes))
+			assert.Equal(t, spec.expEventAttr, attrsToStringMap(em.Events()[0].Attributes))
 		})
 	}
 }
