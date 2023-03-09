@@ -24,7 +24,7 @@
 
 ### Migration notes:
 - See ibc-go [migration notes](https://github.com/cosmos/ibc-go/blob/v4.2.0/docs/migrations)
-- See interchain-accounts [`MsgRegisterAccount.Version` field](https://github.com/cosmos/interchain-accounts-demo/compare/v0.1.0...v0.2.4#diff-ac8bca25810de6d3eef95f74fc9acf2223f3687822e6227b584e0d3b40db6566). Full diff [v0.1.0 to v0.2.4](https://github.com/cosmos/interchain-accounts-demo/compare/v0.1.0...v0.2.4)
+- See interchain-accounts [`MsgRegisterAccount.Version` field](https://github.com/cosmos/ibc-go/v6/modules/apps/27-interchain-accounts-demo/compare/v0.1.0...v0.2.4#diff-ac8bca25810de6d3eef95f74fc9acf2223f3687822e6227b584e0d3b40db6566). Full diff [v0.1.0 to v0.2.4](https://github.com/cosmos/ibc-go/v6/modules/apps/27-interchain-accounts-demo/compare/v0.1.0...v0.2.4)
 
 ## [v0.29.2](https://github.com/CosmWasm/wasmd/tree/v0.29.2) (2022-11-08)
 

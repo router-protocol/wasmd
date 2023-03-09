@@ -5,11 +5,10 @@ go 1.19
 require (
 	github.com/CosmWasm/wasmvm v1.1.1
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8
-	github.com/cosmos/cosmos-sdk v0.45.11
+	github.com/cosmos/cosmos-sdk v0.46.8
 	github.com/cosmos/gogoproto v1.4.3
-	github.com/cosmos/iavl v0.19.4
-	github.com/cosmos/ibc-go/v4 v4.2.0
-	github.com/cosmos/interchain-accounts v0.2.4
+	github.com/cosmos/iavl v0.19.4	
+	github.com/cosmos/ibc-go/v6 v6.1.0
 	github.com/docker/distribution v2.8.1+incompatible
 	github.com/dvsekhvalnov/jose2go v1.5.0
 	github.com/gogo/protobuf v1.3.3
@@ -135,7 +134,6 @@ replace (
 	// TODO Remove it: https://github.com/cosmos/cosmos-sdk/issues/10409
 	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.7.0
 	// latest grpc doesn't work with with our modified proto compiler, so we need to enforce
-	// the following version across all dependencies.
+	// the following version across all dependencies.	
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
-	google.golang.org/grpc => google.golang.org/grpc v1.33.2
 )
